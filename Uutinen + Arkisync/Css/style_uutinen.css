@@ -1,0 +1,81 @@
+
+:root {
+--color-primary:rgb(0,121,194);   /*HH Blue */
+--color-background:rgb(255,255,255);/* valkoinen */
+--color-surface:rgb(230,230,230);   /* harmaa*/
+--color-text:rgb(0,0,0); /* musta */
+--color-text-secondary:rgb(255,255,255); /*valkoinen*/
+  }
+
+body {
+    margin:0;
+    color:var(--color-text);
+    background-color:var(--color-background);
+    font-family: 'Roboto',sans-serif;}
+
+header  a {
+    font-size: 3em;
+    color:var(--color-primary);
+    text-decoration: none;
+    margin-left:10px
+  }
+
+main {
+    max-width: 1000px;
+    margin: auto;
+    padding: 20px;
+}
+
+h1 {color:var(--color-primary);
+    margin-top:0px}
+
+h1 img {
+    width: 50px; 
+    vertical-align: middle;
+  }
+
+h2 {
+    text-align:center
+  }
+
+.coloraccent {color:var(--color-primary)}
+
+.quote {
+    border-left:var(--color-primary) solid 5px;
+    padding-left: 20px;
+    padding-top:5px;
+    padding-bottom:5px}
+
+
+
+
+.logo {
+    width: 200px;
+    height: auto;
+    display: block;
+    margin: 20px auto;
+}
+
+.prototype {
+    width: 80%;
+    max-width: 400px;
+    height: auto;
+    display: block;
+    margin: 30px auto;
+}
+.flex-container {
+    display: block;
+}
+
+@media (min-width: 500px) {
+    .flex-container {
+        display: flex;
+        gap: 30px;
+        align-items: center;
+    }
+
+    .logo {
+        width: 250px;
+        flex-shrink: 0;
+    }
+}

@@ -1,0 +1,1385 @@
+<!DOCTYPE html><html lang="fi" style=""><head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>ArkiSync - Opiskelijan arjenhallinta</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: { DEFAULT: '#175CD3', hover: '#134cb0', secondary: '#DCEBFF', dark: '#172B4D' },
+            accent: { DEFAULT: '#9A5700', bg: '#FFF6ED' },
+            bgApp: '#F3F7FC',
+            surface: '#FFFFFF',
+            textPrimary: '#172B4D',
+            textSecondary: '#526579',
+            borderLight: '#CBD5E1',
+          },
+          fontFamily: { sans: ['Inter', 'sans-serif'] }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Inter', sans-serif; background-color: #0b1528; color: #172B4D; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-2 sm:p-6 md:p-10">
+
+<!-- Device Container -->
+<main class="w-full max-w-[430px] h-[890px] max-h-[96vh] bg-[#F3F7FC] rounded-[40px] shadow-2xl overflow-hidden flex flex-col relative border-4 border-slate-700/60">
+
+  <!-- Top System Bar & Header -->
+  <header class="bg-white px-5 pt-3 pb-3 border-b border-borderLight shrink-0 z-30">
+    <div class="flex justify-between items-center text-xs text-textSecondary font-medium mb-2 px-1">
+      <span id="system-time" class="">09:41</span>
+      <div class="flex items-center gap-1.5">
+        <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9-4.03-9-9-9zm0 16c-3.86 0-7-3.14-7-7s3.14-7 7-7 7 3.14 7 7-3.14 7-7 7z"></path></svg>
+        <span class="text-[11px] font-bold">100%</span>
+      </div>
+    </div>
+    <div class="flex items-center justify-between">
+      <div class="flex items-center gap-2.5 cursor-pointer" onclick="navigateTo('home')">
+        <img alt="ArkiSync" class="w-9 h-9 rounded-lg shadow-xs object-contain cursor-pointer hover:opacity-90 transition" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAEfnxcWu2sy9TnsTip7mN8XS8LVY0eSjm5akrVN950ZQFGdq5s4FYyTiuH8GXthuDgT-WK4Ov3htdxhbnLZSK6iUTRLCuUzc-f7rd3iJuCPa1WO4TBHrAvXTdpwD5CPiiToruYKNxqx9lNirVNWjpm9RByglYs_1SMbQGTi3EALQLPrMq2urira014irO6Tb451fKZOGRTBm_ScFSOIj-cdtKGqXqSWi4lF-GPt_nUHwvlUzlXLz49auPWV9fdUMVgEw">
+        <div>
+          <div class="flex items-center gap-1.5">
+            <span class="text-xl font-bold tracking-tight text-textPrimary leading-none">ArkiSync</span>
+            <span class="text-[10px] font-semibold bg-brand-secondary text-brand px-1.5 py-0.5 rounded-md">OPISKELIJA</span>
+          </div>
+          <p class="text-[11px] text-textSecondary font-medium">Tasapainoa arkeen</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <button onclick="openModal('modal-integrations')" class="p-2 rounded-xl bg-slate-100 hover:bg-brand-secondary/60 text-textPrimary transition" title="Integraatiot ja asetukset">
+          <svg class="w-4 h-4 text-slate-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+        </button>
+        <img alt="Emma" class="w-9 h-9 rounded-full object-cover border-2 border-brand-secondary shadow-xs cursor-pointer" onclick="openModal('modal-integrations')" src="https://lh3.googleusercontent.com/aida/AEtjO1XddmWOIcNqsxySpNvOL84fst8tGAqZT-wXMLWg7W9rCGm3MK1tODgzkddt6Y92ZU935Ik-EX0iJdVs7aKLUzh2a9KQF1wTfihMogXiGR00fixLQQwsnI2o-kOGopmdo_AsXGc4UC2247TBys19ufwm5XMLCvk2NreqTX_z2pRzek6OWgp8xIARdZKRDo_1xYbr8DvfsbSePQUHxrkOh50o_LOOv_TX3PzZUlUAoL199vTW4n5ZOMURJJY">
+      </div>
+    </div>
+  </header>
+
+  <!-- Scroll Area -->
+  <div class="flex-1 overflow-y-auto no-scrollbar p-4 space-y-4" id="content-area">
+
+    <!-- VIEW 1: ETUSIVU -->
+    <section class="space-y-4 pb-8" id="view-home">
+      <div class="flex items-center justify-between px-1 text-xs">
+        <span class="text-[11px] font-semibold text-textSecondary uppercase tracking-wider">Etusivun katsaus</span>
+        <button class="flex items-center gap-1 text-[11px] font-semibold text-brand hover:underline bg-white px-2.5 py-1 rounded-lg border border-borderLight shadow-xs" onclick="openModal('modal-customize-home')">
+          ⚙️ Muokkaa näkymää
+        </button>
+      </div>
+
+      <!-- Health Bar (Optional) -->
+      <div class="bg-gradient-to-r from-emerald-500/15 to-teal-500/10 border border-emerald-300 rounded-2xl p-3 flex items-center justify-between hidden" id="health-widget">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold text-xs">⌚</div>
+          <div>
+            <p class="text-xs font-bold text-emerald-950">Uni 7h 40min • Palautuminen hyvä</p>
+            <p class="text-[10px] text-emerald-700">Apple Health synkronoitu klo 07:15</p>
+          </div>
+        </div>
+        <span class="text-[10px] font-semibold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full">Optimaalinen</span>
+      </div>
+
+      <!-- Hero Card -->
+      <div id="card-hero" class="bg-gradient-to-r from-brand to-[#0e3c88] text-white p-4 rounded-2xl shadow-md transition-all">
+        <div class="flex items-center justify-between">
+          <p class="text-xs uppercase font-medium tracking-wider text-brand-secondary">Keskiviikko 16. huhtikuuta</p>
+          <span class="text-[11px] bg-white/15 px-2 py-0.5 rounded-md text-blue-100">Vk 16</span>
+        </div>
+        <h1 class="text-2xl font-bold mt-1">Hei Emma! 👋</h1>
+        <p class="text-xs text-blue-100 mt-0.5" id="home-summary-text">Tänään kalenterissa 3 menoa ja 3 tärkeää tehtävää.</p>
+        <div class="mt-3 pt-3 border-t border-white/20 flex items-center justify-between gap-2">
+          <div class="flex gap-2">
+            <button class="bg-white/20 hover:bg-white/30 text-white text-xs font-semibold px-2.5 py-1.5 rounded-lg" onclick="openAddEventModal()">+ Meno</button>
+            <button class="bg-white/20 hover:bg-white/30 text-white text-xs font-semibold px-2.5 py-1.5 rounded-lg" onclick="openAddTaskModal()">+ Tehtävä</button>
+          </div>
+          <button class="underline text-xs text-white hover:text-brand-secondary" onclick="navigateTo('calendar')">Avaa kalenteri →</button>
+        </div>
+      </div>
+
+      <!-- Seuraavaksi kalenterissa -->
+      <div id="card-next-event" class="bg-white rounded-2xl p-4 border border-borderLight shadow-xs">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-sm font-bold text-textPrimary flex items-center gap-2">
+            <span class="w-2 h-4 bg-brand rounded-full"></span>
+            Seuraavaksi kalenterissa
+          </h2>
+          <button class="text-xs font-semibold text-brand hover:underline" onclick="navigateTo('calendar')">Kaikki</button>
+        </div>
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-3.5 cursor-pointer hover:border-brand transition" onclick="navigateTo('calendar')">
+          <div class="flex items-start justify-between">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-100 text-purple-800 border border-purple-200">💼 Työ</span>
+                <span class="text-xs font-bold text-textPrimary">Klo 14:00 – 21:00</span>
+              </div>
+              <h3 class="text-sm font-bold text-textPrimary mt-1">Työvuoro / Asiakaspalvelu</h3>
+              <p class="text-xs text-textSecondary mt-0.5">📍 Kauppakeskus Kluuvi, Helsinki</p>
+              <p class="text-[11px] text-brand font-medium mt-1">🔔 Muistutus: 1 h ennen</p>
+            </div>
+            <span class="text-[11px] bg-white text-textSecondary px-2 py-1 rounded-lg border border-slate-200">Avaa →</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Päivän tärkeimmät tehtävät -->
+      <div id="card-tasks" class="bg-white rounded-2xl p-4 border border-borderLight shadow-xs">
+        <div class="flex items-center justify-between mb-2">
+          <div>
+            <h2 class="text-sm font-bold text-textPrimary flex items-center gap-2">
+              <span class="w-2 h-4 bg-accent rounded-full"></span>
+              Päivän tärkeimmät tehtävät
+            </h2>
+            <p class="text-[11px] text-textSecondary">Ruksi valmiiksi tai napauta tietoihin</p>
+          </div>
+          <button class="text-xs font-semibold text-brand hover:underline" onclick="navigateTo('tasks')">Tehtävälistaan</button>
+        </div>
+        <div class="space-y-2 mt-2" id="home-tasks-container">
+        <div class="flex items-start gap-2.5 p-2.5 rounded-xl bg-slate-50 border border-slate-200">
+          <button onclick="toggleTaskStatus('task-1', event)" class="mt-0.5 w-5 h-5 rounded-md border-2 border-slate-400 bg-white text-transparent flex items-center justify-center text-xs">✓</button>
+          <div class="flex-1 cursor-pointer" onclick="navigateTo('task-detail', 'task-1')">
+            <div class="flex justify-between items-center">
+              <span class="text-xs font-semibold text-textPrimary">Ohjelmoinnin harjoitustyö</span>
+              <span class="text-[10px] font-bold px-1.5 py-0.2 rounded bg-amber-100 text-amber-900">Kiire</span>
+            </div>
+            <p class="text-[11px] text-textSecondary mt-0.5">Tietotekniikka 2 • <span class="text-accent font-semibold">Huomenna klo 23:59 (17.4.)</span></p>
+          </div>
+        </div>
+      
+        <div class="flex items-start gap-2.5 p-2.5 rounded-xl bg-slate-50 border border-slate-200">
+          <button onclick="toggleTaskStatus('task-2', event)" class="mt-0.5 w-5 h-5 rounded-md border-2 border-slate-400 bg-white text-transparent flex items-center justify-center text-xs">✓</button>
+          <div class="flex-1 cursor-pointer" onclick="navigateTo('task-detail', 'task-2')">
+            <div class="flex justify-between items-center">
+              <span class="text-xs font-semibold text-textPrimary">Englannin tenttiin kertaaminen</span>
+              <span class="text-[10px] font-bold px-1.5 py-0.2 rounded bg-amber-100 text-amber-900">Kiire</span>
+            </div>
+            <p class="text-[11px] text-textSecondary mt-0.5">Työelämän englanti • <span class="text-accent font-semibold">Torstai 17.4. klo 10:00</span></p>
+          </div>
+        </div>
+      
+        <div class="flex items-start gap-2.5 p-2.5 rounded-xl bg-slate-50 border border-slate-200">
+          <button onclick="toggleTaskStatus('task-3', event)" class="mt-0.5 w-5 h-5 rounded-md border-2 border-slate-400 bg-white text-transparent flex items-center justify-center text-xs">✓</button>
+          <div class="flex-1 cursor-pointer" onclick="navigateTo('task-detail', 'task-3')">
+            <div class="flex justify-between items-center">
+              <span class="text-xs font-semibold text-textPrimary">Tilastotieteen viikkoharjoitus 3</span>
+              <span class="text-[10px] font-bold px-1.5 py-0.2 rounded bg-blue-100 text-blue-800">Normaali</span>
+            </div>
+            <p class="text-[11px] text-textSecondary mt-0.5">Kvantitatiiviset menetelmät • <span class="">Maanantai 21.4. klo 16:00</span></p>
+          </div>
+        </div>
+      </div>
+      </div>
+    </section>
+
+    <!-- VIEW 2: KALENTERI -->
+    <section class="space-y-4 pb-8 hidden" id="view-calendar">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <button onclick="navigateTo('home')" class="p-1.5 rounded-xl bg-slate-100 text-textSecondary hover:bg-slate-200">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+          </button>
+          <h1 class="text-xl font-bold text-textPrimary">Kalenteri</h1>
+        </div>
+        <button onclick="openAddEventModal()" class="bg-brand text-white px-3 py-1.5 rounded-xl text-xs font-semibold hover:bg-brand-hover shadow-xs flex items-center gap-1">
+          + Lisää tapahtuma
+        </button>
+      </div>
+
+      <!-- Quick Test Jump -->
+      <div class="bg-blue-50/80 border border-brand/20 p-2.5 rounded-xl flex items-center justify-between text-xs">
+        <span class="text-[11px] text-textSecondary font-semibold">Testaa päivämäärää:</span>
+        <div class="flex gap-1.5">
+          <button class="px-2 py-1 bg-white border border-borderLight rounded-lg text-brand font-bold text-xs" onclick="selectDate('16-apr')">Ke 16.4. (Tänään)</button>
+          <button class="px-2.5 py-1 bg-brand text-white rounded-lg font-bold text-xs flex items-center gap-1 shadow-xs" onclick="selectDate('1-oct')">
+            <span class="">To 1.10.</span>
+            <span class="text-[9px] bg-white/30 px-1 rounded">Testi</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Days Grid -->
+      <div class="bg-white p-3 rounded-2xl border border-borderLight shadow-xs space-y-2.5">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold text-textPrimary" id="calendar-header-title">Huhtikuu / Lokakuu 2025</span>
+          <button class="text-xs font-semibold text-brand hover:underline" onclick="openModal('modal-categories')">+ Uusi kategoria</button>
+        </div>
+        <div class="grid grid-cols-4 sm:grid-cols-8 gap-1.5 text-center" id="days-strip">
+          <button onclick="selectDate('14-apr')" class="flex flex-col items-center py-2 px-1 rounded-xl text-xs transition bg-slate-50 text-slate-700 hover:bg-slate-100 border border-slate-200">
+            <span class="text-[9px] text-textSecondary">MA</span>
+            <span class="font-bold text-xs mt-0.5">14</span>
+            <span class="w-1.5 h-1.5 rounded-full mt-1 bg-transparent"></span>
+          </button>
+        
+          <button onclick="selectDate('15-apr')" class="flex flex-col items-center py-2 px-1 rounded-xl text-xs transition bg-slate-50 text-slate-700 hover:bg-slate-100 border border-slate-200">
+            <span class="text-[9px] text-textSecondary">TI</span>
+            <span class="font-bold text-xs mt-0.5">15</span>
+            <span class="w-1.5 h-1.5 rounded-full mt-1 bg-transparent"></span>
+          </button>
+        
+          <button onclick="selectDate('16-apr')" class="flex flex-col items-center py-2 px-1 rounded-xl text-xs transition bg-slate-50 text-slate-700 hover:bg-slate-100 border border-slate-200">
+            <span class="text-[9px] text-textSecondary">KE</span>
+            <span class="font-bold text-xs mt-0.5">16</span>
+            <span class="w-1.5 h-1.5 rounded-full mt-1 bg-brand"></span>
+          </button>
+        
+          <button onclick="selectDate('17-apr')" class="flex flex-col items-center py-2 px-1 rounded-xl text-xs transition bg-slate-50 text-slate-700 hover:bg-slate-100 border border-slate-200">
+            <span class="text-[9px] text-textSecondary">TO</span>
+            <span class="font-bold text-xs mt-0.5">17</span>
+            <span class="w-1.5 h-1.5 rounded-full mt-1 bg-brand"></span>
+          </button>
+        
+          <button onclick="selectDate('18-apr')" class="flex flex-col items-center py-2 px-1 rounded-xl text-xs transition bg-slate-50 text-slate-700 hover:bg-slate-100 border border-slate-200">
+            <span class="text-[9px] text-textSecondary">PE</span>
+            <span class="font-bold text-xs mt-0.5">18</span>
+            <span class="w-1.5 h-1.5 rounded-full mt-1 bg-transparent"></span>
+          </button>
+        
+          <button onclick="selectDate('19-apr')" class="flex flex-col items-center py-2 px-1 rounded-xl text-xs transition bg-slate-50 text-slate-700 hover:bg-slate-100 border border-slate-200">
+            <span class="text-[9px] text-textSecondary">LA</span>
+            <span class="font-bold text-xs mt-0.5">19</span>
+            <span class="w-1.5 h-1.5 rounded-full mt-1 bg-transparent"></span>
+          </button>
+        
+          <button onclick="selectDate('20-apr')" class="flex flex-col items-center py-2 px-1 rounded-xl text-xs transition bg-slate-50 text-slate-700 hover:bg-slate-100 border border-slate-200">
+            <span class="text-[9px] text-textSecondary">SU</span>
+            <span class="font-bold text-xs mt-0.5">20</span>
+            <span class="w-1.5 h-1.5 rounded-full mt-1 bg-transparent"></span>
+          </button>
+        
+          <button onclick="selectDate('1-oct')" class="flex flex-col items-center py-2 px-1 rounded-xl text-xs transition bg-brand text-white font-bold ring-2 ring-brand/30 border-2 border-dashed border-brand">
+            <span class="text-[9px] text-blue-100">TO</span>
+            <span class="font-bold text-xs mt-0.5">1.10.</span>
+            <span class="w-1.5 h-1.5 rounded-full mt-1 bg-white"></span>
+          </button>
+        </div>
+
+        <!-- Filter Chips -->
+        <div class="pt-2 border-t border-slate-100 flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar" id="calendar-filter-chips"><button onclick="setCalFilter('all')" class="px-2.5 py-1 rounded-lg text-[11px] font-bold whitespace-nowrap bg-brand text-white">Kaikki (5)</button><button onclick="setCalFilter('Työ')" class="px-2.5 py-1 rounded-lg text-[11px] font-semibold whitespace-nowrap flex items-center gap-1 bg-slate-100 text-textSecondary"><span class="">💼</span> Työ</button><button onclick="setCalFilter('Opiskelu / Koulu')" class="px-2.5 py-1 rounded-lg text-[11px] font-semibold whitespace-nowrap flex items-center gap-1 bg-slate-100 text-textSecondary"><span class="">📘</span> Opiskelu / Koulu</button><button onclick="setCalFilter('Tentti')" class="px-2.5 py-1 rounded-lg text-[11px] font-semibold whitespace-nowrap flex items-center gap-1 bg-slate-100 text-textSecondary"><span class="">📝</span> Tentti</button><button onclick="setCalFilter('Harrastus / Vapaa-aika')" class="px-2.5 py-1 rounded-lg text-[11px] font-semibold whitespace-nowrap flex items-center gap-1 bg-slate-100 text-textSecondary"><span class="">🎾</span> Harrastus / Vapaa-aika</button><button onclick="setCalFilter('Tapaaminen')" class="px-2.5 py-1 rounded-lg text-[11px] font-semibold whitespace-nowrap flex items-center gap-1 bg-slate-100 text-textSecondary"><span class="">🤝</span> Tapaaminen</button><button onclick="setCalFilter('Terveys')" class="px-2.5 py-1 rounded-lg text-[11px] font-semibold whitespace-nowrap flex items-center gap-1 bg-slate-100 text-textSecondary"><span class="">❤️</span> Terveys</button><button onclick="setCalFilter('Henkilökohtainen')" class="px-2.5 py-1 rounded-lg text-[11px] font-semibold whitespace-nowrap flex items-center gap-1 bg-slate-100 text-textSecondary"><span class="">👤</span> Henkilökohtainen</button></div>
+      </div>
+
+      <!-- Selected Date Banner & Timeline -->
+      <div class="bg-white p-4 rounded-2xl border border-borderLight shadow-xs space-y-3">
+        <!-- 5. CLEAR SELECTED DATE DISPLAY -->
+        <div class="p-3 bg-brand/10 border-2 border-brand/30 rounded-xl flex items-center justify-between">
+          <div>
+            <p class="text-[10px] uppercase font-bold text-brand tracking-wider">Aktiivinen valinta</p>
+            <h2 class="text-sm sm:text-base font-bold text-textPrimary" id="calendar-selected-banner">Valittu päivä: torstai 1.10.</h2>
+          </div>
+          <button class="text-xs bg-brand text-white font-semibold px-2.5 py-1 rounded-lg hover:bg-brand-hover shadow-xs" onclick="openAddEventModal()">
+            + Lisää tähän
+          </button>
+        </div>
+
+        <div class="flex justify-between items-center text-xs text-textSecondary pb-1 border-b border-slate-100">
+          <span id="events-count-label" class="">1 tapahtumaa päivälle</span>
+          <span class="text-[11px] text-slate-400">Klikkaa muokataksesi</span>
+        </div>
+
+        <div class="space-y-2.5" id="calendar-timeline">
+            <div onclick="openEditEventModal('ev-5')" class="p-3 rounded-xl bg-slate-50 border border-slate-200 hover:border-brand transition cursor-pointer group">
+              <div class="flex justify-between items-center">
+                <span class="text-xs font-bold text-textPrimary">12:00 – 14:00</span>
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-100 text-blue-800 border-blue-300">📘 Opiskelu / Koulu</span>
+              </div>
+              <h3 class="text-sm font-bold text-textPrimary mt-1 group-hover:text-brand">Syyslukukauden aloitusseminaari</h3>
+              <div class="flex justify-between items-center text-xs text-textSecondary mt-1">
+                <span class="">📍 Päärakennus</span>
+                <span class="text-[10px] bg-white px-1.5 py-0.5 rounded border border-slate-200">🔔 1 pv ennen</span>
+              </div>
+            </div>
+          </div>
+      </div>
+    </section>
+
+    <!-- VIEW 3: TEHTÄVÄLISTA -->
+    <section class="space-y-4 pb-8 hidden" id="view-tasks">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <button onclick="navigateTo('home')" class="p-1.5 rounded-xl bg-slate-100 text-textSecondary hover:bg-slate-200">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+          </button>
+          <h1 class="text-xl font-bold text-textPrimary">Tehtävälista</h1>
+        </div>
+        <button onclick="openAddTaskModal()" class="bg-brand text-white px-3 py-1.5 rounded-xl text-xs font-semibold hover:bg-brand-hover shadow-xs">
+          + Uusi tehtävä
+        </button>
+      </div>
+
+      <!-- Filters -->
+      <div class="flex gap-1.5 overflow-x-auto pb-1 no-scrollbar">
+        <button class="task-tab px-3 py-1.5 rounded-full text-xs font-semibold bg-brand text-white" data-filter="all" onclick="setTaskFilter('all')">Kaikki</button>
+        <button class="task-tab px-3 py-1.5 rounded-full text-xs font-semibold bg-white border border-borderLight text-textSecondary" data-filter="pending" onclick="setTaskFilter('pending')">Keskeneräiset</button>
+        <button class="task-tab px-3 py-1.5 rounded-full text-xs font-semibold bg-white border border-borderLight text-textSecondary" data-filter="urgent" onclick="setTaskFilter('urgent')">Kiireelliset</button>
+        <button class="task-tab px-3 py-1.5 rounded-full text-xs font-semibold bg-white border border-borderLight text-textSecondary" data-filter="completed" onclick="setTaskFilter('completed')">Valmiit</button>
+      </div>
+
+      <div class="space-y-3" id="tasks-full-list">
+        <div class="bg-white rounded-2xl p-4 border border-borderLight shadow-xs">
+          <div class="flex items-start gap-3">
+            <button onclick="toggleTaskStatus('task-1', event)" class="mt-0.5 w-6 h-6 rounded-lg border-2 border-slate-400 bg-white text-transparent flex items-center justify-center text-sm font-bold">✓</button>
+            <div class="flex-1 cursor-pointer" onclick="navigateTo('task-detail', 'task-1')">
+              <div class="flex justify-between items-center">
+                <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-amber-100 text-amber-900">Tietotekniikka 2</span>
+                <span class="text-[11px] font-bold text-accent">Kiireellinen</span>
+              </div>
+              <h2 class="text-sm font-bold text-textPrimary mt-1">Ohjelmoinnin harjoitustyö</h2>
+              <p class="text-xs text-textSecondary mt-1 line-clamp-2">Toteuta RESTful API ja tietokantayhteys opiskelijan arjenhallintaan. Palauta Swagger- ja GitHub-linkki Moodleen.</p>
+              <div class="mt-2.5 pt-2 border-t border-slate-100 flex justify-between items-center text-xs">
+                <span class="font-medium text-accent">⏱ Huomenna klo 23:59 (17.4.)</span>
+                <span class="text-brand font-semibold text-[11px]">Avaa tiedot →</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      
+        <div class="bg-white rounded-2xl p-4 border border-borderLight shadow-xs">
+          <div class="flex items-start gap-3">
+            <button onclick="toggleTaskStatus('task-2', event)" class="mt-0.5 w-6 h-6 rounded-lg border-2 border-slate-400 bg-white text-transparent flex items-center justify-center text-sm font-bold">✓</button>
+            <div class="flex-1 cursor-pointer" onclick="navigateTo('task-detail', 'task-2')">
+              <div class="flex justify-between items-center">
+                <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-amber-100 text-amber-900">Työelämän englanti</span>
+                <span class="text-[11px] font-bold text-accent">Kiireellinen</span>
+              </div>
+              <h3 class="text-sm font-bold text-textPrimary mt-1">Englannin tenttiin kertaaminen</h3>
+              <p class="text-xs text-textSecondary mt-1 line-clamp-2">Kertaa ammatillinen sanasto ja kappaleet 4–6 huomista tenttiä varten.</p>
+              <div class="mt-2.5 pt-2 border-t border-slate-100 flex justify-between items-center text-xs">
+                <span class="font-medium text-accent">⏱ Torstai 17.4. klo 10:00</span>
+                <span class="text-brand font-semibold text-[11px]">Avaa tiedot →</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      
+        <div class="bg-white rounded-2xl p-4 border border-borderLight shadow-xs">
+          <div class="flex items-start gap-3">
+            <button onclick="toggleTaskStatus('task-3', event)" class="mt-0.5 w-6 h-6 rounded-lg border-2 border-slate-400 bg-white text-transparent flex items-center justify-center text-sm font-bold">✓</button>
+            <div class="flex-1 cursor-pointer" onclick="navigateTo('task-detail', 'task-3')">
+              <div class="flex justify-between items-center">
+                <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-blue-100 text-blue-800">Kvantitatiiviset menetelmät</span>
+                <span class="text-[11px] font-bold text-slate-500">Normaali</span>
+              </div>
+              <h3 class="text-sm font-bold text-textPrimary mt-1">Tilastotieteen viikkoharjoitus 3</h3>
+              <p class="text-xs text-textSecondary mt-1 line-clamp-2">Aja annettu aineisto R-studiossa ja vastaa tulkintakysymyksiin.</p>
+              <div class="mt-2.5 pt-2 border-t border-slate-100 flex justify-between items-center text-xs">
+                <span class="font-medium text-accent">⏱ Maanantai 21.4. klo 16:00</span>
+                <span class="text-brand font-semibold text-[11px]">Avaa tiedot →</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW 4: TEHTÄVÄN TIEDOT -->
+    <section class="space-y-4 pb-8 hidden" id="view-task-detail">
+      <div class="flex items-center justify-between">
+        <button class="flex items-center gap-1.5 text-xs font-semibold text-brand hover:underline py-1 px-2 bg-white rounded-lg border border-borderLight" onclick="navigateBackFromDetail()">
+          ← <span id="detail-back-text" class="">Takaisin</span>
+        </button>
+        <span class="text-xs px-2.5 py-0.5 rounded-full font-semibold" id="detail-status-pill">Keskeneräinen</span>
+      </div>
+
+      <div class="bg-white rounded-2xl p-4 border border-borderLight shadow-sm space-y-3">
+        <div class="flex items-center gap-2">
+          <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-blue-100 text-blue-800" id="detail-course">Tietotekniikka 2</span>
+          <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-amber-100 text-amber-900" id="detail-urgency">Kiireellinen</span>
+        </div>
+        <h1 class="text-xl font-bold text-textPrimary leading-snug" id="detail-title">Ohjelmoinnin harjoitustyö</h1>
+        <p class="text-xs text-accent font-semibold" id="detail-deadline">Palautus huomenna klo 23:59</p>
+
+        <hr class="border-slate-100">
+        <div>
+          <h2 class="text-xs font-bold text-textSecondary uppercase tracking-wider mb-1">Kuvaus</h2>
+          <p class="text-xs text-textPrimary bg-slate-50 p-3 rounded-xl border border-slate-200" id="detail-desc">Harjoitustyön kuvaus...</p>
+        </div>
+
+        <div class="space-y-1.5">
+          <div class="flex justify-between items-center text-xs font-bold text-textSecondary uppercase">
+            <span class="">Tarkistuslista</span>
+            <span id="detail-checklist-count" class="">2/3 valmiina</span>
+          </div>
+          <div class="space-y-1.5 text-xs" id="detail-checklist-items"></div>
+        </div>
+      </div>
+
+      <div class="space-y-2">
+        <button class="w-full py-3 px-4 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 shadow-md bg-brand text-white hover:bg-brand-hover" id="detail-toggle-action" onclick="toggleCurrentDetailTask()">
+          Merkitse tehtävä tehdyksi ✓
+        </button>
+        <button class="w-full py-2 text-center text-xs font-semibold text-textSecondary hover:text-textPrimary" onclick="navigateBackFromDetail()">Palaa takaisin</button>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Bottom Navigation -->
+  <nav class="bg-white border-t border-borderLight px-3 py-2 flex items-center justify-around shrink-0 z-30">
+    <button class="flex flex-col items-center py-1 px-3 rounded-xl text-brand font-bold" id="nav-btn-home" onclick="navigateTo('home')">
+      <span class="text-lg">🏠</span>
+      <span class="text-[10px] leading-tight">Etusivu</span>
+    </button>
+    <button class="flex flex-col items-center py-1 px-3 rounded-xl text-textSecondary font-medium" id="nav-btn-calendar" onclick="navigateTo('calendar')">
+      <span class="text-lg">📅</span>
+      <span class="text-[10px] leading-tight">Kalenteri</span>
+    </button>
+    <button class="flex flex-col items-center py-1 px-3 rounded-xl text-textSecondary font-medium relative" id="nav-btn-tasks" onclick="navigateTo('tasks')">
+      <span class="text-lg">✅</span>
+      <span class="absolute top-1 right-2 w-4 h-4 bg-accent text-white text-[9px] font-bold rounded-full flex items-center justify-center" id="nav-badge" style="display: flex;">3</span>
+      <span class="text-[10px] leading-tight">Tehtävät</span>
+    </button>
+    <button class="flex flex-col items-center py-1 px-3 rounded-xl text-textSecondary font-medium" id="nav-btn-settings" onclick="openModal('modal-integrations')">
+      <span class="text-lg">⚙️</span>
+      <span class="text-[10px] leading-tight">Asetukset</span>
+    </button>
+  </nav>
+
+  <!-- MODAL: ADD / EDIT EVENT WITH QUICK TEMPLATES & REMINDERS -->
+  <div class="absolute inset-0 bg-black/60 z-50 flex items-end sm:items-center justify-center hidden" id="modal-event">
+    <div class="bg-white w-full max-w-md max-h-[90vh] rounded-t-3xl sm:rounded-2xl p-5 space-y-3 shadow-2xl overflow-y-auto no-scrollbar">
+      <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+        <div>
+          <h3 class="text-base font-bold text-textPrimary" id="modal-event-title">Lisää tapahtuma</h3>
+          <!-- 5. CLEAR SELECTED DATE IN FORM -->
+          <p class="text-xs text-brand font-bold" id="modal-event-date-display">Päivä: torstai 1.10.2025</p>
+        </div>
+        <button onclick="closeModal('modal-event')" class="text-slate-400 hover:text-textPrimary text-lg">✕</button>
+      </div>
+
+      <!-- 1. QUICK EVENT TEMPLATES (PIKATÄYTÖT) -->
+      <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 space-y-1.5">
+        <div class="flex justify-between items-center">
+          <span class="text-[11px] font-bold uppercase text-slate-600">⚡ Pikatäytöt (valitse pohja)</span>
+          <button type="button" class="text-[11px] font-semibold text-brand hover:underline" onclick="createCustomTemplatePrompt()">+ Luo oma pohja</button>
+        </div>
+        <div class="flex flex-wrap gap-1.5" id="template-chips">
+          <!-- Quick buttons inserted by JS -->
+        </div>
+      </div>
+
+      <form class="space-y-2.5 text-xs" onsubmit="saveEvent(event)">
+        <input type="hidden" id="event-edit-id" value="">
+        <div>
+          <label class="block font-semibold mb-1">Tapahtuman nimi *</label>
+          <input type="text" id="event-name" required="" placeholder="Esim. Aamuvuoro" class="w-full px-3 py-2 rounded-xl border border-borderLight text-xs">
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block font-semibold mb-1">Alkaa *</label>
+            <input type="text" id="event-start" required="" placeholder="06:00" class="w-full px-3 py-2 rounded-xl border border-borderLight text-xs">
+          </div>
+          <div>
+            <label class="block font-semibold mb-1">Päättyy *</label>
+            <input type="text" id="event-end" required="" placeholder="14:00" class="w-full px-3 py-2 rounded-xl border border-borderLight text-xs">
+          </div>
+        </div>
+
+        <!-- 2. CUSTOM EVENT CATEGORIES -->
+        <div>
+          <div class="flex justify-between items-center mb-1">
+            <label class="block font-semibold">Kategoria</label>
+            <button type="button" class="text-[11px] text-brand font-semibold hover:underline" onclick="openModal('modal-categories')">Hallitse kategorioita</button>
+          </div>
+          <select id="event-category" class="w-full px-3 py-2 rounded-xl border border-borderLight text-xs bg-white"></select>
+        </div>
+
+        <div>
+          <label class="block font-semibold mb-1">Sijainti / Tila</label>
+          <input type="text" id="event-location" placeholder="Esim. Kauppakeskus Kluuvi tai Zoom" class="w-full px-3 py-2 rounded-xl border border-borderLight text-xs">
+        </div>
+
+        <!-- 3. CUSTOMIZABLE REMINDERS -->
+        <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-xs flex items-center gap-1">🔔 Muistutukset</span>
+            <label class="flex items-center gap-1 cursor-pointer">
+              <input type="checkbox" id="reminder-toggle" checked="" onchange="toggleReminderSection(this.checked)" class="rounded text-brand">
+              <span class="text-[11px] font-medium text-slate-700">Päällä</span>
+            </label>
+          </div>
+          <div id="reminder-controls" class="space-y-1.5">
+            <div class="flex flex-wrap gap-1">
+              <button type="button" class="px-2 py-0.5 rounded bg-white border border-slate-300 text-[10px] font-semibold hover:border-brand" onclick="setEventReminder('5 min ennen')">5 min</button>
+              <button type="button" class="px-2 py-0.5 rounded bg-white border border-slate-300 text-[10px] font-semibold hover:border-brand" onclick="setEventReminder('30 min ennen')">30 min</button>
+              <button type="button" class="px-2 py-0.5 rounded bg-white border border-slate-300 text-[10px] font-semibold hover:border-brand" onclick="setEventReminder('1 h ennen')">1 h</button>
+              <button type="button" class="px-2 py-0.5 rounded bg-white border border-slate-300 text-[10px] font-semibold hover:border-brand" onclick="setEventReminder('1 pv ennen')">1 pv</button>
+              <button type="button" class="px-2 py-0.5 rounded bg-white border border-slate-300 text-[10px] font-semibold hover:border-brand" onclick="setEventReminder('1 vko ennen')">1 vko</button>
+            </div>
+            <div id="event-reminders-list" class="space-y-1"></div>
+            <button type="button" class="text-[11px] font-semibold text-brand hover:underline" onclick="addCustomReminder()">+ Lisää toinen muistutus</button>
+          </div>
+        </div>
+
+        <!-- 5. CLEAR DATE PROMINENCE NEAR SAVE -->
+        <div class="pt-2 border-t border-slate-100 flex items-center justify-between">
+          <span class="text-[11px] font-bold text-slate-700" id="form-date-hint">Valittu: 1.10.2025</span>
+          <div class="flex gap-2">
+            <button type="button" class="px-3 py-2 rounded-xl border border-borderLight" onclick="closeModal('modal-event')">Peruuta</button>
+            <button type="submit" class="px-4 py-2 rounded-xl bg-brand text-white font-bold hover:bg-brand-hover shadow-xs" id="btn-save-event">Tallenna tapahtuma</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: ADD TASK -->
+  <div class="absolute inset-0 bg-black/60 z-50 flex items-end sm:items-center justify-center hidden" id="modal-task">
+    <div class="bg-white w-full max-w-md rounded-t-3xl sm:rounded-2xl p-5 space-y-3 shadow-2xl">
+      <div class="flex justify-between items-center pb-2 border-b border-slate-100">
+        <h3 class="text-base font-bold">Uusi tehtävä</h3>
+        <button onclick="closeModal('modal-task')" class="text-slate-400 hover:text-textPrimary">✕</button>
+      </div>
+      <form class="space-y-2.5 text-xs" onsubmit="saveTask(event)">
+        <div>
+          <label class="block font-semibold mb-1">Tehtävän otsikko *</label>
+          <input type="text" id="task-name" required="" placeholder="Esim. Taloustieteen essee" class="w-full px-3 py-2 rounded-xl border border-borderLight">
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block font-semibold mb-1">Kurssi</label>
+            <input type="text" id="task-course" placeholder="Esim. Markkinointi" class="w-full px-3 py-2 rounded-xl border border-borderLight">
+          </div>
+          <div>
+            <label class="block font-semibold mb-1">Deadline</label>
+            <input type="text" id="task-deadline" placeholder="Perjantai klo 16:00" class="w-full px-3 py-2 rounded-xl border border-borderLight">
+          </div>
+        </div>
+        <div>
+          <label class="block font-semibold mb-1">Kiireellisyys</label>
+          <select id="task-urgency" class="w-full px-3 py-2 rounded-xl border border-borderLight bg-white">
+            <option value="high">Korkea (Kiireellinen)</option>
+            <option value="medium" selected="">Normaali</option>
+            <option value="low">Matala</option>
+          </select>
+        </div>
+        <div class="pt-2 flex gap-2">
+          <button type="button" class="flex-1 py-2 rounded-xl border border-borderLight" onclick="closeModal('modal-task')">Peruuta</button>
+          <button type="submit" class="flex-1 py-2 rounded-xl bg-brand text-white font-bold">Tallenna tehtävä</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: 4. CUSTOMIZE HOME SCREEN -->
+  <div class="absolute inset-0 bg-black/60 z-50 flex items-end sm:items-center justify-center hidden" id="modal-customize-home">
+    <div class="bg-white w-full max-w-md rounded-t-3xl sm:rounded-2xl p-5 space-y-3.5 shadow-2xl">
+      <div class="flex justify-between items-center pb-2 border-b border-slate-100">
+        <div>
+          <h3 class="text-base font-bold">Muokkaa etusivua</h3>
+          <p class="text-[11px] text-textSecondary">Järjestele ja piilota/näytä osioita</p>
+        </div>
+        <button onclick="closeModal('modal-customize-home')" class="text-slate-400">✕</button>
+      </div>
+
+      <div class="space-y-2 text-xs">
+        <label class="font-bold block">Korostusteema:</label>
+        <div class="grid grid-cols-3 gap-2">
+          <button class="p-2 rounded-xl border-2 border-brand bg-blue-50/50 font-bold text-center" onclick="setAppTheme('blue')">🔵 Sininen</button>
+          <button class="p-2 rounded-xl border border-slate-200 font-bold text-center" onclick="setAppTheme('sage')">🟢 Salvia</button>
+          <button class="p-2 rounded-xl border border-slate-200 font-bold text-center" onclick="setAppTheme('lilac')">🟣 Liila</button>
+        </div>
+      </div>
+
+      <div class="space-y-2 text-xs pt-2 border-t border-slate-100">
+        <label class="font-bold block">Näytettävät osiot:</label>
+        <label class="flex justify-between items-center p-2 rounded-xl bg-slate-50 border border-slate-200">
+          <span class="">Päivän tervehdys &amp; status</span>
+          <input type="checkbox" checked="" onchange="toggleSection('card-hero', this.checked)" class="rounded text-brand">
+        </label>
+        <label class="flex justify-between items-center p-2 rounded-xl bg-slate-50 border border-slate-200">
+          <span class="">Seuraavaksi kalenterissa</span>
+          <input type="checkbox" checked="" onchange="toggleSection('card-next-event', this.checked)" class="rounded text-brand">
+        </label>
+        <label class="flex justify-between items-center p-2 rounded-xl bg-slate-50 border border-slate-200">
+          <span class="">Tärkeimmät tehtävät</span>
+          <input type="checkbox" checked="" onchange="toggleSection('card-tasks', this.checked)" class="rounded text-brand">
+        </label>
+        <label class="flex justify-between items-center p-2 rounded-xl bg-slate-50 border border-slate-200">
+          <span class="">Apple Health / Uni &amp; palautuminen</span>
+          <input type="checkbox" id="health-toggle-home" onchange="toggleHealthWidget(this.checked)" class="rounded text-brand">
+        </label>
+      </div>
+
+      <button class="w-full py-2.5 bg-brand text-white font-bold rounded-xl text-xs" onclick="closeModal('modal-customize-home')">Valmis</button>
+    </div>
+  </div>
+
+  <!-- MODAL: 6. INTEGRATIONS & SETTINGS -->
+  <div class="absolute inset-0 bg-black/60 z-50 flex items-end sm:items-center justify-center hidden" id="modal-integrations">
+    <div class="bg-white w-full max-w-md rounded-t-3xl sm:rounded-2xl p-5 space-y-3.5 shadow-2xl">
+      <div class="flex justify-between items-center pb-2 border-b border-slate-100">
+        <div>
+          <h3 class="text-base font-bold">Integraatiot &amp; Asetukset</h3>
+          <p class="text-[11px] text-textSecondary">Yhdistä ulkoiset kalenterit ja laitteet</p>
+        </div>
+        <button onclick="closeModal('modal-integrations')" class="text-slate-400">✕</button>
+      </div>
+
+      <div class="space-y-2.5 text-xs">
+        <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 flex justify-between items-center">
+          <div class="flex items-center gap-2.5">
+            <span class="w-8 h-8 rounded-lg bg-white border border-slate-200 flex items-center justify-center font-bold text-blue-600">G</span>
+            <div>
+              <p class="font-bold">Google Kalenteri</p>
+              <p class="text-[10px] text-emerald-600 font-medium">Yhdistetty (simuloitu) • Synkronoitu</p>
+            </div>
+          </div>
+          <span class="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">Päällä</span>
+        </div>
+
+        <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 flex justify-between items-center">
+          <div class="flex items-center gap-2.5">
+            <span class="w-8 h-8 rounded-lg bg-white border border-slate-200 flex items-center justify-center font-bold text-sky-700">O</span>
+            <div>
+              <p class="font-bold">Outlook Kalenteri</p>
+              <p class="text-[10px] text-textSecondary">Opiskelija- / työtili</p>
+            </div>
+          </div>
+          <button class="px-2.5 py-1 bg-white border border-slate-300 rounded-lg text-brand font-bold text-xs" onclick="showToast('Yhdistetään Outlook-tiliin (simuloitu)...')">Yhdistä</button>
+        </div>
+
+        <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 flex justify-between items-center">
+          <div class="flex items-center gap-2.5">
+            <span class="w-8 h-8 rounded-lg bg-white border border-slate-200 flex items-center justify-center font-bold text-rose-600">⌚</span>
+            <div>
+              <p class="font-bold">Apple Health / Apple Watch</p>
+              <p class="text-[10px] text-textSecondary">Uni ja palautuminen (valinnainen)</p>
+            </div>
+          </div>
+          <input type="checkbox" id="integration-health" onchange="toggleHealthWidget(this.checked)" class="rounded text-brand w-4 h-4">
+        </div>
+      </div>
+
+      <button class="w-full py-2.5 bg-brand text-white font-bold rounded-xl text-xs" onclick="closeModal('modal-integrations')">Sulje</button>
+    </div>
+  </div>
+
+  <!-- MODAL: 2. CUSTOM CATEGORIES MANAGEMENT -->
+  <div class="absolute inset-0 bg-black/60 z-50 flex items-end sm:items-center justify-center hidden" id="modal-categories">
+    <div class="bg-white w-full max-w-md rounded-t-3xl sm:rounded-2xl p-5 space-y-3.5 shadow-2xl">
+      <div class="flex justify-between items-center pb-2 border-b border-slate-100">
+        <div>
+          <h3 class="text-base font-bold">Omat tapahtumakategoriat</h3>
+          <p class="text-[11px] text-textSecondary">Muokkaa ja lisää uusia kategorioita</p>
+        </div>
+        <button onclick="closeModal('modal-categories')" class="text-slate-400">✕</button>
+      </div>
+
+      <div class="space-y-1.5 max-h-48 overflow-y-auto no-scrollbar" id="categories-modal-list"></div>
+
+      <div class="pt-2 border-t border-slate-100 space-y-1.5">
+        <span class="text-xs font-bold block">+ Luo uusi kategoria</span>
+        <div class="flex gap-2">
+          <input type="text" id="new-cat-name" placeholder="Kategorian nimi" class="flex-1 px-3 py-1.5 rounded-xl border border-borderLight text-xs">
+          <input type="text" id="new-cat-icon" placeholder="Kuvake" value="📌" class="w-14 text-center px-1 py-1.5 rounded-xl border border-borderLight text-xs">
+          <button class="px-3 py-1.5 bg-brand text-white font-bold rounded-xl text-xs" onclick="addNewCategory()">Lisää</button>
+        </div>
+      </div>
+
+      <button class="w-full py-2 bg-slate-100 text-textSecondary font-bold rounded-xl text-xs" onclick="closeModal('modal-categories')">Valmis</button>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="absolute bottom-16 left-4 right-4 bg-[#041b3c] text-white px-4 py-3 rounded-xl text-xs font-semibold shadow-2xl flex items-center justify-between opacity-0 pointer-events-none transition duration-300 z-50 border border-slate-600" id="toast">
+    <div class="flex items-center gap-2">
+      <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+      <span id="toast-text" class="">Tapahtuma tallennettu!</span>
+    </div>
+    <span class="text-brand-secondary text-[10px]">OK</span>
+  </div>
+
+</main>
+
+<script>
+  // -------------------------------------------------------------
+  // STATE MANAGEMENT
+  // -------------------------------------------------------------
+  const state = {
+    currentScreen: 'home',
+    previousScreen: 'home',
+    selectedTaskId: 'task-1',
+    selectedDateKey: '1-oct', // Focus on test case 1.10.
+    calendarFilter: 'all',
+    taskFilter: 'all',
+
+    // 2. Custom Categories
+    categories: [
+      { id: 'tyo', name: 'Työ', icon: '💼', color: 'bg-purple-100 text-purple-800 border-purple-300' },
+      { id: 'opiskelu', name: 'Opiskelu / Koulu', icon: '📘', color: 'bg-blue-100 text-blue-800 border-blue-300' },
+      { id: 'tentti', name: 'Tentti', icon: '📝', color: 'bg-rose-100 text-rose-800 border-rose-300' },
+      { id: 'harrastus', name: 'Harrastus / Vapaa-aika', icon: '🎾', color: 'bg-teal-100 text-teal-800 border-teal-300' },
+      { id: 'tapaaminen', name: 'Tapaaminen', icon: '🤝', color: 'bg-emerald-100 text-emerald-800 border-emerald-300' },
+      { id: 'terveys', name: 'Terveys', icon: '❤️', color: 'bg-pink-100 text-pink-800 border-pink-300' },
+      { id: 'henkilokohtainen', name: 'Henkilökohtainen', icon: '👤', color: 'bg-slate-100 text-slate-800 border-slate-300' }
+    ],
+
+    // 1. Quick Event Templates (Pikatäytöt)
+    templates: [
+      { id: 'tpl-aamu', title: 'Aamuvuoro', start: '06:00', end: '14:00', category: 'Työ', location: 'Kauppakeskus Kluuvi', reminders: ['30 min ennen'] },
+      { id: 'tpl-ilta', title: 'Iltavuoro', start: '14:00', end: '22:00', category: 'Työ', location: 'Kauppakeskus Kluuvi', reminders: ['1 h ennen'] },
+      { id: 'tpl-yo', title: 'Yövuoro', start: '22:00', end: '06:00', category: 'Työ', location: 'Kauppakeskus Kluuvi', reminders: [] },
+      { id: 'tpl-tentti', title: 'Tentti', start: '10:00', end: '13:00', category: 'Tentti', location: 'Sali A102', reminders: ['1 pv ennen'] },
+      { id: 'tpl-deadline', title: 'Tehtävän deadline', start: '23:59', end: '23:59', category: 'Opiskelu / Koulu', location: 'Moodle', reminders: ['1 pv ennen'] }
+    ],
+
+    days: [
+      { key: '14-apr', label: 'Ma 14', short: 'MA', full: 'maanantai 14.4.', display: '14.4.2025' },
+      { key: '15-apr', label: 'Ti 15', short: 'TI', full: 'tiistai 15.4.', display: '15.4.2025' },
+      { key: '16-apr', label: 'Ke 16', short: 'KE', full: 'keskiviikko 16.4.', display: '16.4.2025', isToday: true },
+      { key: '17-apr', label: 'To 17', short: 'TO', full: 'torstai 17.4.', display: '17.4.2025' },
+      { key: '18-apr', label: 'Pe 18', short: 'PE', full: 'perjantai 18.4.', display: '18.4.2025' },
+      { key: '19-apr', label: 'La 19', short: 'LA', full: 'lauantai 19.4.', display: '19.4.2025' },
+      { key: '20-apr', label: 'Su 20', short: 'SU', full: 'sunnuntai 20.4.', display: '20.4.2025' },
+      // 5. TEST TARGET: TO 1.10.
+      { key: '1-oct', label: 'To 1.10.', short: 'TO', full: 'torstai 1.10.', display: '1.10.2025', isSpecial: true }
+    ],
+
+    events: [
+      { id: 'ev-1', dateKey: '16-apr', title: 'Ohjelmointi 2 luento', start: '10:00', end: '12:00', category: 'Opiskelu / Koulu', location: 'Zoom', reminders: ['30 min ennen'] },
+      { id: 'ev-2', dateKey: '16-apr', title: 'Työvuoro / Asiakaspalvelu', start: '14:00', end: '21:00', category: 'Työ', location: 'Kauppakeskus Kluuvi', reminders: ['1 h ennen'] },
+      { id: 'ev-3', dateKey: '16-apr', title: 'Tennisharjoitukset', start: '18:00', end: '20:00', category: 'Harrastus / Vapaa-aika', location: 'Tali', reminders: ['30 min ennen'] },
+      { id: 'ev-4', dateKey: '17-apr', title: 'Englannin tentti', start: '10:00', end: '12:00', category: 'Tentti', location: 'Sali A102', reminders: ['1 pv ennen'] },
+      { id: 'ev-5', dateKey: '1-oct', title: 'Syyslukukauden aloitusseminaari', start: '12:00', end: '14:00', category: 'Opiskelu / Koulu', location: 'Päärakennus', reminders: ['1 pv ennen'] }
+    ],
+
+    modalReminders: ['30 min ennen'],
+
+    tasks: [
+      {
+        id: 'task-1',
+        title: 'Ohjelmoinnin harjoitustyö',
+        course: 'Tietotekniikka 2',
+        deadline: 'Huomenna klo 23:59 (17.4.)',
+        urgency: 'high',
+        status: 'pending',
+        description: 'Toteuta RESTful API ja tietokantayhteys opiskelijan arjenhallintaan. Palauta Swagger- ja GitHub-linkki Moodleen.',
+        checklist: [
+          { text: 'Tietokantarakenne luotu', done: true },
+          { text: 'Rajapinta testattu', done: true },
+          { text: 'Viimeistele dokumentaatio', done: false }
+        ]
+      },
+      {
+        id: 'task-2',
+        title: 'Englannin tenttiin kertaaminen',
+        course: 'Työelämän englanti',
+        deadline: 'Torstai 17.4. klo 10:00',
+        urgency: 'high',
+        status: 'pending',
+        description: 'Kertaa ammatillinen sanasto ja kappaleet 4–6 huomista tenttiä varten.',
+        checklist: [
+          { text: 'Kertaa kappaleet 4–6', done: true },
+          { text: 'Tee sanastoharjoitukset', done: false }
+        ]
+      },
+      {
+        id: 'task-3',
+        title: 'Tilastotieteen viikkoharjoitus 3',
+        course: 'Kvantitatiiviset menetelmät',
+        deadline: 'Maanantai 21.4. klo 16:00',
+        urgency: 'medium',
+        status: 'pending',
+        description: 'Aja annettu aineisto R-studiossa ja vastaa tulkintakysymyksiin.',
+        checklist: [
+          { text: 'Lataa datasetti', done: true },
+          { text: 'Kirjoita tulokset raporttiin', done: false }
+        ]
+      }
+    ]
+  };
+
+  // -------------------------------------------------------------
+  // NAVIGATION ROUTER
+  // -------------------------------------------------------------
+  function navigateTo(screenId, taskId = null) {
+    if (taskId) state.selectedTaskId = taskId;
+    if (state.currentScreen !== screenId && state.currentScreen !== 'task-detail') {
+      state.previousScreen = state.currentScreen;
+    }
+    state.currentScreen = screenId;
+    render();
+    document.getElementById('content-area').scrollTop = 0;
+  }
+
+  function navigateBackFromDetail() {
+    navigateTo(state.previousScreen === 'home' ? 'home' : 'tasks');
+  }
+
+  // -------------------------------------------------------------
+  // RENDER MASTER
+  // -------------------------------------------------------------
+  function render() {
+    // 1. Screens visibility
+    ['home', 'calendar', 'tasks', 'task-detail'].forEach(id => {
+      const el = document.getElementById('view-' + id);
+      if (el) el.classList.toggle('hidden', state.currentScreen !== id);
+    });
+
+    // 2. Bottom Nav
+    ['home', 'calendar', 'tasks'].forEach(id => {
+      const btn = document.getElementById('nav-btn-' + id);
+      const isActive = (state.currentScreen === id) || (state.currentScreen === 'task-detail' && id === 'tasks');
+      if (btn) {
+        btn.classList.toggle('text-brand', isActive);
+        btn.classList.toggle('font-bold', isActive);
+        btn.classList.toggle('text-textSecondary', !isActive);
+      }
+    });
+
+    // Badge count
+    const pendingTasks = state.tasks.filter(t => t.status === 'pending');
+    const badge = document.getElementById('nav-badge');
+    if (badge) {
+      badge.textContent = pendingTasks.length;
+      badge.style.display = pendingTasks.length > 0 ? 'flex' : 'none';
+    }
+
+    renderHome();
+    renderCalendar();
+    renderTasks();
+    if (state.currentScreen === 'task-detail') renderTaskDetail();
+  }
+
+  // -------------------------------------------------------------
+  // SCREEN 1: HOME
+  // -------------------------------------------------------------
+  function renderHome() {
+    const pendingCount = state.tasks.filter(t => t.status === 'pending').length;
+    const summary = document.getElementById('home-summary-text');
+    if (summary) summary.textContent = `Tänään kalenterissa 3 menoa ja ${pendingCount} tärkeää tehtävää.`;
+
+    const container = document.getElementById('home-tasks-container');
+    if (!container) return;
+
+    container.innerHTML = state.tasks.map(task => {
+      const isDone = task.status === 'completed';
+      return `
+        <div class="flex items-start gap-2.5 p-2.5 rounded-xl ${isDone ? 'bg-emerald-50/50 border border-emerald-200' : 'bg-slate-50 border border-slate-200'}">
+          <button onclick="toggleTaskStatus('${task.id}', event)" class="mt-0.5 w-5 h-5 rounded-md border-2 ${isDone ? 'bg-emerald-600 border-emerald-600 text-white' : 'border-slate-400 bg-white text-transparent'} flex items-center justify-center text-xs">✓</button>
+          <div class="flex-1 cursor-pointer" onclick="navigateTo('task-detail', '${task.id}')">
+            <div class="flex justify-between items-center">
+              <span class="text-xs font-semibold ${isDone ? 'line-through text-slate-400' : 'text-textPrimary'}">${task.title}</span>
+              <span class="text-[10px] font-bold px-1.5 py-0.2 rounded ${isDone ? 'bg-emerald-100 text-emerald-800' : (task.urgency === 'high' ? 'bg-amber-100 text-amber-900' : 'bg-blue-100 text-blue-800')}">${isDone ? 'Valmis' : (task.urgency === 'high' ? 'Kiire' : 'Normaali')}</span>
+            </div>
+            <p class="text-[11px] text-textSecondary mt-0.5">${task.course} • <span class="${!isDone && task.urgency === 'high' ? 'text-accent font-semibold' : ''}">${task.deadline}</span></p>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // -------------------------------------------------------------
+  // SCREEN 2: CALENDAR
+  // -------------------------------------------------------------
+  function selectDate(key) {
+    state.selectedDateKey = key;
+    renderCalendar();
+    const day = state.days.find(d => d.key === key);
+    if (day) showToast(`Valittu päivä: ${day.full}`);
+  }
+
+  function renderCalendar() {
+    // Render Day Pills
+    const strip = document.getElementById('days-strip');
+    if (strip) {
+      strip.innerHTML = state.days.map(d => {
+        const isSel = d.key === state.selectedDateKey;
+        const count = state.events.filter(e => e.dateKey === d.key).length;
+        return `
+          <button onclick="selectDate('${d.key}')" class="flex flex-col items-center py-2 px-1 rounded-xl text-xs transition ${isSel ? 'bg-brand text-white font-bold ring-2 ring-brand/30' : 'bg-slate-50 text-slate-700 hover:bg-slate-100'} ${d.isSpecial ? 'border-2 border-dashed border-brand' : 'border border-slate-200'}">
+            <span class="text-[9px] ${isSel ? 'text-blue-100' : 'text-textSecondary'}">${d.short}</span>
+            <span class="font-bold text-xs mt-0.5">${d.label.split(' ')[1] || d.label}</span>
+            <span class="w-1.5 h-1.5 rounded-full mt-1 ${isSel ? 'bg-white' : (count > 0 ? 'bg-brand' : 'bg-transparent')}"></span>
+          </button>
+        `;
+      }).join('');
+    }
+
+    // 5. CLEAR SELECTED DATE
+    const dayObj = state.days.find(d => d.key === state.selectedDateKey) || state.days[7];
+    const banner = document.getElementById('calendar-selected-banner');
+    if (banner) banner.textContent = `Valittu päivä: ${dayObj.full}`;
+
+    // Filter chips
+    const filterContainer = document.getElementById('calendar-filter-chips');
+    if (filterContainer) {
+      let html = `<button onclick="setCalFilter('all')" class="px-2.5 py-1 rounded-lg text-[11px] font-bold whitespace-nowrap ${state.calendarFilter === 'all' ? 'bg-brand text-white' : 'bg-slate-100 text-textSecondary'}">Kaikki (${state.events.length})</button>`;
+      state.categories.forEach(cat => {
+        const isAct = state.calendarFilter === cat.name;
+        html += `<button onclick="setCalFilter('${cat.name}')" class="px-2.5 py-1 rounded-lg text-[11px] font-semibold whitespace-nowrap flex items-center gap-1 ${isAct ? 'bg-brand text-white' : 'bg-slate-100 text-textSecondary'}"><span>${cat.icon}</span> ${cat.name}</button>`;
+      });
+      filterContainer.innerHTML = html;
+    }
+
+    // Events timeline for selected date
+    let dayEvents = state.events.filter(e => e.dateKey === state.selectedDateKey);
+    if (state.calendarFilter !== 'all') dayEvents = dayEvents.filter(e => e.category === state.calendarFilter);
+
+    const countLabel = document.getElementById('events-count-label');
+    if (countLabel) countLabel.textContent = `${dayEvents.length} tapahtumaa päivälle`;
+
+    const timeline = document.getElementById('calendar-timeline');
+    if (timeline) {
+      if (dayEvents.length === 0) {
+        timeline.innerHTML = `
+          <div class="text-center py-8 bg-slate-50 rounded-xl border border-dashed border-borderLight p-4">
+            <p class="text-xs font-bold text-textPrimary">Ei tapahtumia päivälle ${dayObj.display}</p>
+            <p class="text-[11px] text-textSecondary mt-0.5">Napauta "+ Lisää tähän" luodaksesi uuden vuoron tai menon.</p>
+            <button onclick="openAddEventModal()" class="text-xs font-bold text-brand hover:underline mt-2">+ Lisää tapahtuma tälle päivälle</button>
+          </div>
+        `;
+      } else {
+        timeline.innerHTML = dayEvents.map(ev => {
+          const cat = state.categories.find(c => c.name === ev.category) || state.categories[0];
+          const remText = ev.reminders && ev.reminders.length > 0 ? ev.reminders.join(', ') : 'Ei muistutusta';
+          return `
+            <div onclick="openEditEventModal('${ev.id}')" class="p-3 rounded-xl bg-slate-50 border border-slate-200 hover:border-brand transition cursor-pointer group">
+              <div class="flex justify-between items-center">
+                <span class="text-xs font-bold text-textPrimary">${ev.start} – ${ev.end}</span>
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${cat.color}">${cat.icon} ${cat.name}</span>
+              </div>
+              <h3 class="text-sm font-bold text-textPrimary mt-1 group-hover:text-brand">${ev.title}</h3>
+              <div class="flex justify-between items-center text-xs text-textSecondary mt-1">
+                <span>📍 ${ev.location || 'Ei sijaintia'}</span>
+                <span class="text-[10px] bg-white px-1.5 py-0.5 rounded border border-slate-200">🔔 ${remText}</span>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+    }
+  }
+
+  function setCalFilter(cat) {
+    state.calendarFilter = cat;
+    renderCalendar();
+  }
+
+  // -------------------------------------------------------------
+  // SCREEN 3: TASKS
+  // -------------------------------------------------------------
+  function setTaskFilter(filter) {
+    state.taskFilter = filter;
+    document.querySelectorAll('.task-tab').forEach(b => {
+      const active = b.dataset.filter === filter;
+      b.className = active ? 'task-tab px-3 py-1.5 rounded-full text-xs font-semibold bg-brand text-white' : 'task-tab px-3 py-1.5 rounded-full text-xs font-semibold bg-white border border-borderLight text-textSecondary';
+    });
+    renderTasks();
+  }
+
+  function renderTasks() {
+    let list = state.tasks;
+    if (state.taskFilter === 'pending') list = list.filter(t => t.status === 'pending');
+    else if (state.taskFilter === 'urgent') list = list.filter(t => t.urgency === 'high' && t.status === 'pending');
+    else if (state.taskFilter === 'completed') list = list.filter(t => t.status === 'completed');
+
+    const container = document.getElementById('tasks-full-list');
+    if (!container) return;
+
+    container.innerHTML = list.map(task => {
+      const isDone = task.status === 'completed';
+      return `
+        <div class="bg-white rounded-2xl p-4 border border-borderLight shadow-xs">
+          <div class="flex items-start gap-3">
+            <button onclick="toggleTaskStatus('${task.id}', event)" class="mt-0.5 w-6 h-6 rounded-lg border-2 ${isDone ? 'bg-emerald-600 border-emerald-600 text-white' : 'border-slate-400 bg-white text-transparent'} flex items-center justify-center text-sm font-bold">✓</button>
+            <div class="flex-1 cursor-pointer" onclick="navigateTo('task-detail', '${task.id}')">
+              <div class="flex justify-between items-center">
+                <span class="text-xs font-semibold px-2 py-0.5 rounded-full ${task.urgency === 'high' ? 'bg-amber-100 text-amber-900' : 'bg-blue-100 text-blue-800'}">${task.course}</span>
+                <span class="text-[11px] font-bold ${isDone ? 'text-emerald-700' : (task.urgency === 'high' ? 'text-accent' : 'text-slate-500')}">${isDone ? 'Valmis ✓' : (task.urgency === 'high' ? 'Kiireellinen' : 'Normaali')}</span>
+              </div>
+              <h3 class="text-sm font-bold text-textPrimary mt-1 ${isDone ? 'line-through text-slate-400' : ''}">${task.title}</h3>
+              <p class="text-xs text-textSecondary mt-1 line-clamp-2">${task.description}</p>
+              <div class="mt-2.5 pt-2 border-t border-slate-100 flex justify-between items-center text-xs">
+                <span class="font-medium ${isDone ? 'text-slate-400' : 'text-accent'}">⏱ ${task.deadline}</span>
+                <span class="text-brand font-semibold text-[11px]">Avaa tiedot →</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // -------------------------------------------------------------
+  // SCREEN 4: TASK DETAILS
+  // -------------------------------------------------------------
+  function renderTaskDetail() {
+    const task = state.tasks.find(t => t.id === state.selectedTaskId) || state.tasks[0];
+    if (!task) return;
+
+    const isDone = task.status === 'completed';
+    document.getElementById('detail-back-text').textContent = state.previousScreen === 'home' ? 'Takaisin etusivulle' : 'Takaisin tehtävälistaan';
+    document.getElementById('detail-title').textContent = task.title;
+    document.getElementById('detail-title').className = `text-xl font-bold leading-snug ${isDone ? 'line-through text-slate-400' : 'text-textPrimary'}`;
+    document.getElementById('detail-course').textContent = task.course;
+    document.getElementById('detail-deadline').textContent = 'Palautus: ' + task.deadline;
+    document.getElementById('detail-desc').textContent = task.description;
+
+    const statusPill = document.getElementById('detail-status-pill');
+    statusPill.textContent = isDone ? 'Valmis ✓' : 'Keskeneräinen';
+    statusPill.className = `text-xs px-2.5 py-0.5 rounded-full font-semibold ${isDone ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-900'}`;
+
+    const btn = document.getElementById('detail-toggle-action');
+    if (isDone) {
+      btn.textContent = 'Palauta tehtävä keskeneräiseksi';
+      btn.className = 'w-full py-3 px-4 rounded-xl font-semibold text-sm bg-slate-100 text-textPrimary hover:bg-slate-200';
+    } else {
+      btn.textContent = 'Merkitse tehtävä tehdyksi ✓';
+      btn.className = 'w-full py-3 px-4 rounded-xl font-semibold text-sm bg-brand text-white hover:bg-brand-hover shadow-md';
+    }
+
+    const count = task.checklist.filter(c => c.done).length;
+    document.getElementById('detail-checklist-count').textContent = `${count}/${task.checklist.length} valmiina`;
+    document.getElementById('detail-checklist-items').innerHTML = task.checklist.map((item, idx) => `
+      <label class="flex items-center gap-2 p-2 bg-slate-50 rounded-lg border border-slate-200 cursor-pointer">
+        <input type="checkbox" ${item.done ? 'checked' : ''} onchange="toggleChecklistItem(${idx})" class="rounded text-brand"/>
+        <span class="${item.done ? 'line-through text-slate-400' : 'text-textPrimary font-medium'}">${item.text}</span>
+      </label>
+    `).join('');
+  }
+
+  function toggleChecklistItem(index) {
+    const task = state.tasks.find(t => t.id === state.selectedTaskId);
+    if (task) {
+      task.checklist[index].done = !task.checklist[index].done;
+      renderTaskDetail();
+    }
+  }
+
+  function toggleCurrentDetailTask() {
+    toggleTaskStatus(state.selectedTaskId);
+    renderTaskDetail();
+  }
+
+  function toggleTaskStatus(id, event) {
+    if (event) event.stopPropagation();
+    const task = state.tasks.find(t => t.id === id);
+    if (!task) return;
+    task.status = task.status === 'completed' ? 'pending' : 'completed';
+    showToast(task.status === 'completed' ? `"${task.title}" merkitty valmiiksi! 🎉` : `"${task.title}" palautettu keskeneräiseksi.`);
+    render();
+  }
+
+  // -------------------------------------------------------------
+  // 1 & 3: EVENT MODAL, QUICK TEMPLATES & REMINDERS
+  // -------------------------------------------------------------
+  function openAddEventModal() {
+    const day = state.days.find(d => d.key === state.selectedDateKey) || state.days[7];
+    document.getElementById('modal-event-title').textContent = 'Lisää tapahtuma';
+    document.getElementById('modal-event-date-display').textContent = `Päivä: ${day.full} (${day.display})`;
+    document.getElementById('form-date-hint').textContent = `Valittu: ${day.display}`;
+    document.getElementById('btn-save-event').textContent = `Tallenna tapahtuma (${day.display})`;
+
+    document.getElementById('event-edit-id').value = '';
+    document.getElementById('event-name').value = '';
+    document.getElementById('event-start').value = '10:00';
+    document.getElementById('event-end').value = '12:00';
+    document.getElementById('event-location').value = '';
+
+    populateCategorySelect('event-category');
+    renderTemplateChips();
+
+    state.modalReminders = ['30 min ennen'];
+    document.getElementById('reminder-toggle').checked = true;
+    renderRemindersList();
+
+    openModal('modal-event');
+  }
+
+  function openEditEventModal(id) {
+    const ev = state.events.find(e => e.id === id);
+    if (!ev) return;
+
+    const day = state.days.find(d => d.key === ev.dateKey) || state.days[7];
+    document.getElementById('modal-event-title').textContent = 'Muokkaa tapahtumaa & muistutusta';
+    document.getElementById('modal-event-date-display').textContent = `Päivä: ${day.full} (${day.display})`;
+    document.getElementById('form-date-hint').textContent = `Päivä: ${day.display}`;
+    document.getElementById('btn-save-event').textContent = 'Tallenna muutokset';
+
+    document.getElementById('event-edit-id').value = ev.id;
+    document.getElementById('event-name').value = ev.title;
+    document.getElementById('event-start').value = ev.start;
+    document.getElementById('event-end').value = ev.end;
+    document.getElementById('event-location').value = ev.location || '';
+
+    populateCategorySelect('event-category', ev.category);
+    renderTemplateChips();
+
+    state.modalReminders = ev.reminders ? [...ev.reminders] : [];
+    document.getElementById('reminder-toggle').checked = state.modalReminders.length > 0;
+    renderRemindersList();
+
+    openModal('modal-event');
+  }
+
+  function populateCategorySelect(selectId, selected = '') {
+    const select = document.getElementById(selectId);
+    if (!select) return;
+    select.innerHTML = state.categories.map(c => `
+      <option value="${c.name}" ${c.name === selected ? 'selected' : ''}>${c.icon} ${c.name}</option>
+    `).join('');
+  }
+
+  function renderTemplateChips() {
+    const container = document.getElementById('template-chips');
+    if (!container) return;
+    container.innerHTML = state.templates.map(tpl => `
+      <button type="button" onclick="applyTemplate('${tpl.id}')" class="px-2.5 py-1 bg-white border border-slate-300 rounded-lg text-[11px] font-bold hover:border-brand text-slate-800 shadow-2xs">
+        ⚡ ${tpl.title}
+      </button>
+    `).join('');
+  }
+
+  // 1. APPLY QUICK TEMPLATE (PIKATÄYTTÖ)
+  function applyTemplate(tplId) {
+    const tpl = state.templates.find(t => t.id === tplId);
+    if (!tpl) return;
+
+    document.getElementById('event-name').value = tpl.title;
+    document.getElementById('event-start').value = tpl.start;
+    document.getElementById('event-end').value = tpl.end;
+    document.getElementById('event-location').value = tpl.location || '';
+
+    populateCategorySelect('event-category', tpl.category);
+
+    state.modalReminders = tpl.reminders ? [...tpl.reminders] : [];
+    document.getElementById('reminder-toggle').checked = state.modalReminders.length > 0;
+    renderRemindersList();
+
+    showToast(`Pohja "${tpl.title}" ladattu! Klo ${tpl.start}–${tpl.end}`);
+  }
+
+  // 3. REMINDER HANDLERS
+  function toggleReminderSection(enabled) {
+    const controls = document.getElementById('reminder-controls');
+    if (enabled) {
+      controls.classList.remove('opacity-40', 'pointer-events-none');
+      if (state.modalReminders.length === 0) state.modalReminders = ['30 min ennen'];
+    } else {
+      controls.classList.add('opacity-40', 'pointer-events-none');
+      state.modalReminders = [];
+    }
+    renderRemindersList();
+  }
+
+  function setEventReminder(val) {
+    document.getElementById('reminder-toggle').checked = true;
+    document.getElementById('reminder-controls').classList.remove('opacity-40', 'pointer-events-none');
+    if (!state.modalReminders.includes(val)) state.modalReminders = [val];
+    renderRemindersList();
+  }
+
+  function addCustomReminder() {
+    const opts = ['1 h ennen', '1 pv ennen', '10 min ennen', '2 h ennen', '1 vko ennen'];
+    const next = opts.find(o => !state.modalReminders.includes(o)) || '1 h ennen';
+    state.modalReminders.push(next);
+    renderRemindersList();
+  }
+
+  function removeReminder(idx) {
+    state.modalReminders.splice(idx, 1);
+    if (state.modalReminders.length === 0) {
+      document.getElementById('reminder-toggle').checked = false;
+      document.getElementById('reminder-controls').classList.add('opacity-40', 'pointer-events-none');
+    }
+    renderRemindersList();
+  }
+
+  function renderRemindersList() {
+    const container = document.getElementById('event-reminders-list');
+    if (!container) return;
+    if (state.modalReminders.length === 0) {
+      container.innerHTML = `<p class="text-[10px] text-textSecondary italic">Ei muistutuksia.</p>`;
+      return;
+    }
+    container.innerHTML = state.modalReminders.map((rem, idx) => `
+      <div class="flex justify-between items-center p-1 bg-white rounded border border-slate-200 text-xs">
+        <span class="font-medium text-slate-700">🔔 ${rem}</span>
+        <button type="button" class="text-rose-600 font-bold px-1" onclick="removeReminder(${idx})">✕</button>
+      </div>
+    `).join('');
+  }
+
+  function saveEvent(e) {
+    e.preventDefault();
+    const editId = document.getElementById('event-edit-id').value;
+    const title = document.getElementById('event-name').value.trim();
+    const start = document.getElementById('event-start').value.trim();
+    const end = document.getElementById('event-end').value.trim();
+    const category = document.getElementById('event-category').value;
+    const location = document.getElementById('event-location').value.trim();
+    const reminders = document.getElementById('reminder-toggle').checked ? [...state.modalReminders] : [];
+
+    if (editId) {
+      const ev = state.events.find(item => item.id === editId);
+      if (ev) {
+        ev.title = title;
+        ev.start = start;
+        ev.end = end;
+        ev.category = category;
+        ev.location = location;
+        ev.reminders = reminders;
+        showToast(`Tapahtuma "${title}" päivitetty! ✅`);
+      }
+    } else {
+      const newEv = {
+        id: 'ev-' + Date.now(),
+        dateKey: state.selectedDateKey,
+        title, start, end, category, location, reminders
+      };
+      state.events.push(newEv);
+      const day = state.days.find(d => d.key === state.selectedDateKey);
+      showToast(`Tallennettu päivälle ${day ? day.display : ''}! 📅`);
+    }
+
+    closeModal('modal-event');
+    render();
+  }
+
+  function createCustomTemplatePrompt() {
+    const title = prompt('Anna uuden pikatäyttöpohjan nimi (esim. Viikonloppuvuoro):');
+    if (!title) return;
+    state.templates.push({
+      id: 'tpl-' + Date.now(),
+      title,
+      start: '10:00',
+      end: '18:00',
+      category: 'Työ',
+      location: 'Työpaikka',
+      reminders: ['1 h ennen']
+    });
+    renderTemplateChips();
+    showToast(`Uusi pohja "${title}" lisätty!`);
+  }
+
+  // -------------------------------------------------------------
+  // 2. CATEGORIES MANAGEMENT
+  // -------------------------------------------------------------
+  function renderCategoriesModal() {
+    const list = document.getElementById('categories-modal-list');
+    if (!list) return;
+    list.innerHTML = state.categories.map(c => `
+      <div class="flex justify-between items-center p-2 rounded-lg bg-slate-50 border border-slate-200 text-xs">
+        <span class="font-bold flex items-center gap-1.5">${c.icon} ${c.name}</span>
+        <span class="text-[10px] px-2 py-0.5 rounded ${c.color}">Aktiivinen</span>
+      </div>
+    `).join('');
+  }
+
+  function addNewCategory() {
+    const name = document.getElementById('new-cat-name').value.trim();
+    const icon = document.getElementById('new-cat-icon').value.trim() || '📌';
+    if (!name) return;
+    state.categories.push({
+      id: 'cat-' + Date.now(),
+      name,
+      icon,
+      color: 'bg-indigo-100 text-indigo-800 border-indigo-300'
+    });
+    document.getElementById('new-cat-name').value = '';
+    renderCategoriesModal();
+    populateCategorySelect('event-category');
+    renderCalendar();
+    showToast(`Kategoria "${name}" lisätty!`);
+  }
+
+  // -------------------------------------------------------------
+  // TASK ADD MODAL
+  // -------------------------------------------------------------
+  function openAddTaskModal() {
+    openModal('modal-task');
+  }
+
+  function saveTask(e) {
+    e.preventDefault();
+    const title = document.getElementById('task-name').value.trim();
+    const course = document.getElementById('task-course').value.trim() || 'Oma opiskelu';
+    const deadline = document.getElementById('task-deadline').value.trim() || 'Ei määritelty';
+    const urgency = document.getElementById('task-urgency').value;
+
+    state.tasks.unshift({
+      id: 'task-' + Date.now(),
+      title, course, deadline, urgency,
+      status: 'pending',
+      description: 'Opiskelijan lisäämä kurssitehtävä.',
+      checklist: [{ text: 'Aloita tehtävä', done: false }]
+    });
+
+    closeModal('modal-task');
+    showToast(`Tehtävä "${title}" lisätty!`);
+    render();
+  }
+
+  // -------------------------------------------------------------
+  // 4. CUSTOMIZE HOME & THEMES
+  // -------------------------------------------------------------
+  function toggleSection(cardId, isVisible) {
+    const el = document.getElementById(cardId);
+    if (el) el.classList.toggle('hidden', !isVisible);
+  }
+
+  function toggleHealthWidget(enabled) {
+    const widget = document.getElementById('health-widget');
+    if (widget) widget.classList.toggle('hidden', !enabled);
+    const homeToggle = document.getElementById('health-toggle-home');
+    if (homeToggle) homeToggle.checked = enabled;
+    const integToggle = document.getElementById('integration-health');
+    if (integToggle) integToggle.checked = enabled;
+    if (enabled) showToast('Apple Health uniseuranta kytketty päälle! ⌚');
+  }
+
+  function setAppTheme(theme) {
+    const hero = document.getElementById('card-hero');
+    if (!hero) return;
+    if (theme === 'blue') {
+      hero.className = 'bg-gradient-to-r from-brand to-[#0e3c88] text-white p-4 rounded-2xl shadow-md transition-all';
+    } else if (theme === 'sage') {
+      hero.className = 'bg-gradient-to-r from-[#1c523d] to-[#0f3525] text-white p-4 rounded-2xl shadow-md transition-all';
+    } else if (theme === 'lilac') {
+      hero.className = 'bg-gradient-to-r from-[#58338e] to-[#391c63] text-white p-4 rounded-2xl shadow-md transition-all';
+    }
+    showToast(`Teema vaihdettu: ${theme}`);
+  }
+
+  // -------------------------------------------------------------
+  // HELPERS: MODALS & TOAST
+  // -------------------------------------------------------------
+  function openModal(id) {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('hidden');
+    if (id === 'modal-categories') renderCategoriesModal();
+  }
+
+  function closeModal(id) {
+    const el = document.getElementById(id);
+    if (el) el.classList.add('hidden');
+  }
+
+  function showToast(msg) {
+    const toast = document.getElementById('toast');
+    const txt = document.getElementById('toast-text');
+    if (!toast || !txt) return;
+    txt.textContent = msg;
+    toast.classList.remove('opacity-0', 'pointer-events-none');
+    setTimeout(() => {
+      toast.classList.add('opacity-0', 'pointer-events-none');
+    }, 2800);
+  }
+
+  // Initial load
+  render();
+</script>
+
+
+
+
+
+</body></html>
